@@ -1,9 +1,3 @@
-/** Allgemeine Fragen:
- * Tastenkürzel Zeile markieren? (zum Kopieren)
- * Wie einen grösseren Abschnitt in etwas wrappen?
- * Wie eine umbenannte Property an allen benutzten Stellen umbenennen? (refactoring hero -> selectedHero)
- * Wie Seed korrekt kopieren?
- */
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -16,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var hero_service_1 = require("./hero.service");
+var router_1 = require("@angular/router");
 var HeroesComponent = (function () {
     /** Hero object initialization (before click event binding was introduced)
     hero: Hero = {
@@ -27,10 +22,11 @@ var HeroesComponent = (function () {
     //type infered from the HEROES array
     //!! unusual: data separated from instantiation (later: external data source)
     // heroes = HEROES;
-    //constructors
-    //?? defines a private heroService prop, identifies it as a HeroService injectin site
-    function HeroesComponent(heroService) {
+    //constructor
+    //?? defines a private heroService prop, identifies it as a HeroService injection site
+    function HeroesComponent(heroService, router) {
         this.heroService = heroService;
+        this.router = router;
     }
     //methods
     //erst durch diese Methode wird getHeroes wirklich gecallt (lifecycle calls, interface OnInit)
@@ -49,19 +45,20 @@ var HeroesComponent = (function () {
     HeroesComponent.prototype.onSelect = function (hero) {
         this.selectedHero = hero;
     };
+    HeroesComponent.prototype.gotoDetail = function () {
+        this.router.navigate(['/detail', this.selectedHero.id]);
+    };
     return HeroesComponent;
 }());
 HeroesComponent = __decorate([
     core_1.Component({
         selector: 'my-heroes',
         /**view*/
-        styles: ["\n  .selected {\n    background-color: #CFD8DC !important;\n    color: white;\n  }\n  .heroes {\n    margin: 0 0 2em 0;\n    list-style-type: none;\n    padding: 0;\n    width: 15em;\n  }\n  .heroes li {\n    cursor: pointer;\n    position: relative;\n    left: 0;\n    background-color: #EEE;\n    margin: .5em;\n    padding: .3em 0;\n    height: 1.6em;\n    border-radius: 4px;\n  }\n  .heroes li.selected:hover {\n    background-color: #BBD8DC !important;\n    color: white;\n  }\n  .heroes li:hover {\n    color: #607D8B;\n    background-color: #DDD;\n    left: .1em;\n  }\n  .heroes .text {\n    position: relative;\n    top: -3px;\n  }\n  .heroes .badge {\n    display: inline-block;\n    font-size: small;\n    color: white;\n    padding: 0.8em 0.7em 0 0.7em;\n    background-color: #607D8B;\n    line-height: 1em;\n    position: relative;\n    left: -1px;\n    top: -4px;\n    height: 1.8em;\n    margin-right: .8em;\n    border-radius: 4px 0 0 4px;\n  }\n"],
-        // {{ = interpolation (one-way data binding)
-        // "You wrote a multi-line template using ES2015's template literals to make the template readable."
-        // -> Where exactly did that happen? What does it mean??
-        template: "\n    <h2>My Heroes</h2>\n    \n    <ul class = \"heroes\">\n    \n      <!-- * = <li> is a master template = renders an <li> instance for each array element-->\n      <!-- let hero = hero is input variable. variable props can be accessed within template-->\n      \n      <!-- class binding (CSS) -->\n      <!-- When hero === selectedHero is true, Angular adds the \"selected\" CSS class from styles above-->\n      \n      <!-- click event binding. Master (master/detail)-->\n      <!-- calls the onSelect method and passes the hero variable -->\n      <!-- ?? \"Click event is the target\" Why target? -->\n      \n      <li *ngFor=\"let hero of heroes\"\n       [class.selected]=\"hero === selectedHero\"\n       (click)=\"onSelect (hero)\">\n        <span class=\"badge\">{{hero.id}}</span>\n        {{hero.name}}\n      </li>\n    </ul>\n    \n    <!-- Binds the selectedHero prop of the HeroesComponent to the hero prop of the HeroDetailComponent -->\n    <!-- ? How does it know where to look for hero? 1. hero-detail -> ...?-->\n    <hero-detail [hero]=\"selectedHero\"></hero-detail>\n    \n  ",
+        templateUrl: './heroes.component.html',
+        styleUrls: ['./heroes.component.css'] //Array. Can add styles from different locations.
     }),
-    __metadata("design:paramtypes", [hero_service_1.HeroService])
+    __metadata("design:paramtypes", [hero_service_1.HeroService,
+        router_1.Router])
 ], HeroesComponent);
 exports.HeroesComponent = HeroesComponent;
 //# sourceMappingURL=heroes.component.js.map

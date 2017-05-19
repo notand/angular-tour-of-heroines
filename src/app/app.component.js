@@ -13,14 +13,15 @@ var core_1 = require("@angular/core");
 var AppComponent = (function () {
     function AppComponent() {
         //props
-        this.title = 'Tour of Heroes';
+        this.title = 'Tour of Heroines';
     }
     return AppComponent;
 }());
 AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
-        template: "\n    <h1>{{title}}</h1>\n    <nav>\n    <a routerLink=\"/dashboard\">Dashboard</a>\n    <a routerLink=\"/heroes\">Heroes</a> <!--RouterLink directive-->\n    <router-outlet></router-outlet>\n    </nav>\n  "
+        template: "\n    <h1>{{title}}</h1>\n    <nav>\n    <a routerLink=\"/dashboard\"\n    routerLinkActive=\"active\">Dashboard</a>\n    <a routerLink=\"/heroines\"\n    routerLinkActive=\"active\">Heroines</a> <!--RouterLink directive-->\n    </nav>\n    <router-outlet></router-outlet><!--Hier werden in app.module definierte Router-Components angezeigt -->\n  ",
+        styleUrls: ['./app.component.css'],
     })
 ], AppComponent);
 exports.AppComponent = AppComponent;

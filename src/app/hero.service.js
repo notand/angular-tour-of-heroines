@@ -11,13 +11,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 // Injectable is a function
 var core_1 = require("@angular/core");
 var mock_heroes_1 = require("./mock-heroes");
-//? tells TypeScript to emit metadata about the service. Angular may need to inject other dependencies into this service.
-//? ensures consistency and future-proofing
+// Angular may need to inject other dependencies into this service.
+//Ensures consistency and future-proofing
 var HeroService = (function () {
     function HeroService() {
     }
     HeroService.prototype.getHeroes = function () {
         return Promise.resolve(mock_heroes_1.HEROES);
+    };
+    //filters the heroes list from getHeroes() by id
+    HeroService.prototype.getHero = function (id) {
+        return this.getHeroes()
+            .then(function (heroes) { return heroes.find(function (hero) {
+            return hero.id === id;
+        }); });
     };
     return HeroService;
 }());

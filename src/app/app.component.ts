@@ -11,16 +11,19 @@ import { Component } from "@angular/core";
   template: `
     <h1>{{title}}</h1>
     <nav>
-    <a routerLink="/dashboard">Dashboard</a>
-    <a routerLink="/heroes">Heroes</a> <!--RouterLink directive-->
-    <router-outlet></router-outlet>
+    <a routerLink="/dashboard"
+    routerLinkActive="active">Dashboard</a>
+    <a routerLink="/heroines"
+    routerLinkActive="active">Heroines</a> <!--RouterLink directive-->
     </nav>
-  `
+    <router-outlet></router-outlet><!--Hier werden in app.module definierte Router-Components angezeigt -->
+  `,
+  styleUrls: ['./app.component.css'],
 })
 
 export class AppComponent {
 
   //props
-  title = 'Tour of Heroes';
+  title = 'Tour of Heroines';
 
 }

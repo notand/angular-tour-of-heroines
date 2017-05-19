@@ -1,0 +1,29 @@
+<h2>My Heroines</h2>
+
+<ul class = "heroes">
+
+  <!-- * = <li> is a master template = renders an <li> instance for each array element-->
+  <!-- let hero = hero is input variable. variable props can be accessed within template-->
+
+  <!-- class binding (CSS) -->
+  <!-- When hero === selectedHero is true, Angular adds the "selected" CSS class from styles above-->
+
+  <!-- click event binding. Master (master/detail)-->
+  <!-- calls the onSelect method and passes the hero variable -->
+  <!-- ?? "Click event is the target" Why target? -->
+
+  <!--{{ = interpolation (one-way data binding)-->
+
+  <li *ngFor="let hero of heroes"
+      [class.selected]="hero === selectedHero"
+      (click)="onSelect (hero)">
+    <span class="badge">{{hero.id}}</span>
+    {{hero.name}}
+  </li>
+</ul>
+<div *ngIf="selectedHero">
+  <h2>
+    {{selectedHero.name | uppercase}} is my heroine <!-- | = pipe operator -->
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>

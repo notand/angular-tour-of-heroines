@@ -11,19 +11,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+require("rxjs/add/operator/switchMap");
 //?? Why must I define exactly which decorators I want to import?
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
 var hero_1 = require("./hero");
 var hero_service_1 = require("./hero.service");
-// Angular metadata
 var HeroDetailComponent = (function () {
+    //Inject the services into the constructor, saving their values in private fields
     function HeroDetailComponent(heroService, route, location) {
         this.heroService = heroService;
         this.route = route;
         this.location = location;
     }
+    //?? The switchMap operator maps the id in the Observable route parameters to a new Observable, the result of the HeroService.getHero() method.
+    // If a user re-navigates to this component while a getHero request is still processing, switchMap cancels the old request and then calls HeroService.getHero() again.
+    // hero id = number. Route parameters = strings. + = JavaScript operator that converts string to number.
+    HeroDetailComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.params
+            .switchMap(function (params) {
+            return _this.heroService.getHero(+params["id"]);
+        })
+            .subscribe(function (hero) { return _this.hero = hero; });
+    };
+    HeroDetailComponent.prototype.goBack = function () {
+        this.location.back();
+    };
     return HeroDetailComponent;
 }());
 __decorate([
@@ -34,7 +49,8 @@ HeroDetailComponent = __decorate([
     core_1.Component({
         //CSS selector: tag name of the element that represents the HeroDetailComponent in other files
         selector: 'hero-detail',
-        template: "\n\n    <!-- div exists only when there is a selectedHero, otherwise reference fails (not initiated below)-->\n    <!-- ngIf = built-in structural directive -->\n    <div *ngIf=\"hero\">\n      <h2>{{hero.name}} details!</h2>\n      <div>\n        <label>id: </label> {{hero.id}}\n      </div>\n       <div>\n         <label>name: </label>\n         <input [(ngModel)]=\"hero.name\" placeholder=\"name\">\n        </div>\n     </div>\n\n\n  "
+        templateUrl: './hero-detail.component.html',
+        styleUrls: ['./hero-detail.component.css'],
     }),
     __metadata("design:paramtypes", [hero_service_1.HeroService,
         router_1.ActivatedRoute,

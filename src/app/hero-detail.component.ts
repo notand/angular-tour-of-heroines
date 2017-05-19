@@ -2,6 +2,8 @@
  * Created by andrea on 19.04.17.
  */
 
+import 'rxjs/add/operator/switchMap';
+
 //?? Why must I define exactly which decorators I want to import?
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params} from '@angular/router';
@@ -10,42 +12,38 @@ import { Location } from '@angular/common';
 import {Hero} from './hero';
 import { HeroService } from './hero.service';
 
-// Angular metadata
 @Component({
   //CSS selector: tag name of the element that represents the HeroDetailComponent in other files
   selector: 'hero-detail',
-
-  template: `
-
-    <!-- div exists only when there is a selectedHero, otherwise reference fails (not initiated below)-->
-    <!-- ngIf = built-in structural directive -->
-    <div *ngIf="hero">
-      <h2>{{hero.name}} details!</h2>
-      <div>
-        <label>id: </label> {{hero.id}}
-      </div>
-       <div>
-         <label>name: </label>
-         <input [(ngModel)]="hero.name" placeholder="name">
-        </div>
-     </div>
-
-
-  `
-
+  templateUrl: './hero-detail.component.html',
+  styleUrls: ['./hero-detail.component.css'],
 })
 
-export class HeroDetailComponent {
+export class HeroDetailComponent implements OnInit {
 
-  //?? Hat ne leicht andere Struktur als @Component
-  //? "receive (?) a hero object throuh its hero input property, and then bind to that property with its template."
+  //? "receive (?) a hero object through its hero input property, and then bind to that property with its template."
   @Input() hero: Hero;
 
+  //?? The switchMap operator maps the id in the Observable route parameters to a new Observable, the result of the HeroService.getHero() method.
+  // If a user re-navigates to this component while a getHero request is still processing, switchMap cancels the old request and then calls HeroService.getHero() again.
+  // hero id = number. Route parameters = strings. + = JavaScript operator that converts string to number.
+  ngOnInit():void {
+    this.route.params
+      .switchMap((params: Params) =>
+        this.heroService.getHero(+params[`id`]))
+      .subscribe(hero => this.hero = hero);
+  }
+
+  //Inject the services into the constructor, saving their values in private fields
   constructor(
     private heroService: HeroService,
     private route: ActivatedRoute,
     private location: Location
   ) {}
+
+  goBack(): void {
+    this.location.back();
+  }
 }
 
 /*
